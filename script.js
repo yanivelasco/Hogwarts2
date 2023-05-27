@@ -1,4 +1,4 @@
-"use strict";
+ "use strict";
 
 //__________________________________________________________FETCH AND PREPARE DATA _______________________________________________________________________________________________
 
@@ -135,7 +135,7 @@ function prepareObjects(jsonData) {
 
     // PHOTO_______________________________________________________________________________________________
 
-    let imageSrc = new Image(100, 100);
+    let imageSrc = new Image();
 
     student.image = imageSrc;
 
@@ -143,7 +143,8 @@ function prepareObjects(jsonData) {
 
     let firstnameL = student.firstName.charAt(0).toLowerCase();
 
-    imageSrc.src = "images/" + lastnameL + "_" + firstnameL + ".png";
+    imageSrc.src = "images/" + lastnameL + "_" + firstnameL + ".jpg";
+
 
    
     if (lastnameL.includes("patil")) {
@@ -190,6 +191,8 @@ function displayStudent(student) {
 
 
 //__________________________________________________________FILTER_______________________________________________________________________________________________
+
+//__________________________________________________________MASONRY GRID_______________________________________________________________________________________________
 
 
 //SORT
