@@ -196,12 +196,88 @@ function displayStudent(student) {
 
 //__________________________________________________________FILTER_______________________________________________________________________________________________
 
+
+
+
+
 //__________________________________________________________MASONRY GRID_______________________________________________________________________________________________
 
 
 //SORT
 
+document.getElementById('sortByFirstName').addEventListener('click', sortStudentsByFirstName);
+document.getElementById('sortByLastName').addEventListener('click', sortStudentsByLastName);
+document.getElementById('sortByHouse').addEventListener('click', sortStudentsByHouse);
+
+// Add event listeners to the house buttons
+const houseButtons = document.querySelectorAll('.houseButton');
+houseButtons.forEach(button => {
+  button.addEventListener('click', () => {
+    const house = button.getAttribute('data-house');
+    filterStudentsByHouse(house);
+  });
+});
+
+function sortStudentsByFirstName() {
+  allStudents.sort((a, b) => a.firstName.localeCompare(b.firstName));
+  displayList();
+}
+
+function sortStudentsByLastName() {
+  allStudents.sort((a, b) => a.lastName.localeCompare(b.lastName));
+  displayList();
+}
+
+function sortStudentsByHouse() {
+  allStudents.sort((a, b) => a.house.localeCompare(b.house));
+  displayList();
+}
+
+function filterStudentsByHouse(house) {
+  const filteredStudents = allStudents.filter(student => student.house === house);
+  displayFilteredStudents(filteredStudents);
+}
+
+function displayFilteredStudents(filteredStudents) {
+  document.querySelector("#list tbody").innerHTML = "";
+
+  filteredStudents.forEach(displayStudent);
+}
+
+function displayList() {
+  document.querySelector("#list tbody").innerHTML = "";
+
+  allStudents.forEach(displayStudent);
+}
+
+
 //SEARCH
+
+function start() {
+  console.log("ready");
+
+  loadJSON();
+
+  const searchInput = document.getElementById("searchInput");
+  searchInput.addEventListener("input", performSearch);
+}
+
+function performSearch() {
+  const searchInput = document.getElementById("searchInput").value.toLowerCase();
+  const filteredStudents = allStudents.filter(student => {
+    const fullName = `${student.firstName} ${student.middleName} ${student.lastName}`.toLowerCase();
+    return fullName.includes(searchInput);
+  });
+  displayFilteredStudents(filteredStudents);
+}
+
+function displayFilteredStudents(filteredStudents) {
+  const listContainer = document.querySelector("#list tbody");
+  listContainer.innerHTML = "";
+
+  filteredStudents.forEach(displayStudent);
+}
+
 
 //MODAL WITH INFO
 
