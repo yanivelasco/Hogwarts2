@@ -290,3 +290,42 @@ function displayFilteredStudents(filteredStudents) {
 //PREFECTS
 
 //INQUISITORIAL
+
+//STUDENTS COUNT
+function countStudents() {
+  const houseCounts = {
+    Gryffindor: 0,
+    Hufflepuff: 0,
+    Ravenclaw: 0,
+    Slytherin: 0,
+  };
+
+  allStudents.forEach(student => {
+    houseCounts[student.house]++;
+  });
+
+  houseCounts.total = allStudents.length;
+
+  return houseCounts;
+}
+
+
+function displayList() {
+  document.querySelector("#list tbody").innerHTML = "";
+
+  allStudents.forEach(displayStudent);
+
+  const houseCounts = countStudents();
+  displayStudentCounts(houseCounts);
+}
+
+function displayStudentCounts(counts) {
+  const countContainer = document.querySelector("#studentCounts");
+  countContainer.innerHTML = "";
+
+  for (const house in counts) {
+    const countElement = document.createElement("div");
+    countElement.textContent = `${house}: ${counts[house]}`;
+    countContainer.appendChild(countElement);
+  }
+}
