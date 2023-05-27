@@ -205,50 +205,52 @@ function displayStudent(student) {
 
 //SORT
 
-document.getElementById('sortByFirstName').addEventListener('click', sortStudentsByFirstName);
-document.getElementById('sortByLastName').addEventListener('click', sortStudentsByLastName);
-document.getElementById('sortByHouse').addEventListener('click', sortStudentsByHouse);
+// document.getElementById('sortByFirstName').addEventListener('click', sortStudentsByFirstName);
+// document.getElementById('sortByLastName').addEventListener('click', sortStudentsByLastName);
+// document.getElementById('sortByHouse').addEventListener('click', sortStudentsByHouse);
 
-// Add event listeners to the house buttons
-const houseButtons = document.querySelectorAll('.houseButton');
-houseButtons.forEach(button => {
-  button.addEventListener('click', () => {
-    const house = button.getAttribute('data-house');
-    filterStudentsByHouse(house);
-  });
-});
+// // Add event listeners to the house buttons
+// const houseButtons = document.querySelectorAll('.houseButton');
+// houseButtons.forEach(button => {
+//   button.addEventListener('click', () => {
+//     const house = button.getAttribute('data-house');
+//     filterStudentsByHouse(house);
+//   });
+// });
 
-function sortStudentsByFirstName() {
-  allStudents.sort((a, b) => a.firstName.localeCompare(b.firstName));
-  displayList();
-}
+// function sortStudentsByFirstName() {
+//   allStudents.sort((a, b) => a.firstName.localeCompare(b.firstName));
+//   displayList();
+// }
 
-function sortStudentsByLastName() {
-  allStudents.sort((a, b) => a.lastName.localeCompare(b.lastName));
-  displayList();
-}
+// function sortStudentsByLastName() {
+//   allStudents.sort((a, b) => a.lastName.localeCompare(b.lastName));
+//   displayList();
+// }
 
-function sortStudentsByHouse() {
-  allStudents.sort((a, b) => a.house.localeCompare(b.house));
-  displayList();
-}
+// function sortStudentsByHouse() {
+//   allStudents.sort((a, b) => a.house.localeCompare(b.house));
+//   displayList();
+// }
 
-function filterStudentsByHouse(house) {
-  const filteredStudents = allStudents.filter(student => student.house === house);
-  displayFilteredStudents(filteredStudents);
-}
+// function filterStudentsByHouse(house) {
+//   const filteredStudents = allStudents.filter(student => student.house === house);
+//   displayFilteredStudents(filteredStudents);
+// }
 
-function displayFilteredStudents(filteredStudents) {
-  document.querySelector("#list tbody").innerHTML = "";
+// function displayFilteredStudents(filteredStudents) {
+//   document.querySelector("#list tbody").innerHTML = "";
 
-  filteredStudents.forEach(displayStudent);
-}
+//   filteredStudents.forEach(displayStudent);
+// }
 
-function displayList() {
-  document.querySelector("#list tbody").innerHTML = "";
+// function displayList() {
+//   document.querySelector("#list tbody").innerHTML = "";
 
-  allStudents.forEach(displayStudent);
-}
+//   allStudents.forEach(displayStudent);
+// }
+
+
 
 
 //SEARCH
@@ -329,3 +331,7 @@ function displayStudentCounts(counts) {
     countContainer.appendChild(countElement);
   }
 }
+
+
+
+
