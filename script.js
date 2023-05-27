@@ -148,12 +148,16 @@ function prepareObjects(jsonData) {
 
    
     if (lastnameL.includes("patil")) {
-      imageSrc.src = "images/" + lastnameL + "_" + student.firstName.toLowerCase() + ".png";
+      imageSrc.src = "images/" + lastnameL + "_" + student.firstName.toLowerCase() + ".jpg";
+    }
+
+    else if (student.firstName === "Leanne") {
+      student.image = "images/default.jpg";
     }
 
     else if (lastnameL.includes("-")) {
       imageSrc.src =
-        "images/" + lastnameL.substring(lastnameL.indexOf("-") + 1) + "_" + firstnameL + ".png";
+        "images/" + lastnameL.substring(lastnameL.indexOf("-") + 1) + "_" + firstnameL + ".jpg";
     }
 
     // ADD TO ALL STUDENTS INTO GLOBAL ARRAY
