@@ -203,52 +203,6 @@ function displayStudent(student) {
 //__________________________________________________________MASONRY GRID_______________________________________________________________________________________________
 
 
-//SORT
-
-// document.getElementById('sortByFirstName').addEventListener('click', sortStudentsByFirstName);
-// document.getElementById('sortByLastName').addEventListener('click', sortStudentsByLastName);
-// document.getElementById('sortByHouse').addEventListener('click', sortStudentsByHouse);
-
-// // Add event listeners to the house buttons
-// const houseButtons = document.querySelectorAll('.houseButton');
-// houseButtons.forEach(button => {
-//   button.addEventListener('click', () => {
-//     const house = button.getAttribute('data-house');
-//     filterStudentsByHouse(house);
-//   });
-// });
-
-// function sortStudentsByFirstName() {
-//   allStudents.sort((a, b) => a.firstName.localeCompare(b.firstName));
-//   displayList();
-// }
-
-// function sortStudentsByLastName() {
-//   allStudents.sort((a, b) => a.lastName.localeCompare(b.lastName));
-//   displayList();
-// }
-
-// function sortStudentsByHouse() {
-//   allStudents.sort((a, b) => a.house.localeCompare(b.house));
-//   displayList();
-// }
-
-// function filterStudentsByHouse(house) {
-//   const filteredStudents = allStudents.filter(student => student.house === house);
-//   displayFilteredStudents(filteredStudents);
-// }
-
-// function displayFilteredStudents(filteredStudents) {
-//   document.querySelector("#list tbody").innerHTML = "";
-
-//   filteredStudents.forEach(displayStudent);
-// }
-
-// function displayList() {
-//   document.querySelector("#list tbody").innerHTML = "";
-
-//   allStudents.forEach(displayStudent);
-// }
 
 
 
@@ -335,3 +289,91 @@ function displayStudentCounts(counts) {
 
 
 
+// SORT 
+
+function start() {
+  console.log("ready");
+
+  loadJSON();
+
+  const searchInput = document.getElementById("searchInput");
+  searchInput.addEventListener("input", performSearch);
+
+  const sortFirstNameBtn = document.getElementById("sortFirstNameBtn");
+  sortFirstNameBtn.addEventListener("click", sortStudentsByFirstName);
+
+  const sortLastNameBtn = document.getElementById("sortLastNameBtn");
+  sortLastNameBtn.addEventListener("click", sortStudentsByLastName);
+}
+
+function sortStudentsByFirstName() {
+  allStudents.sort((a, b) => {
+    const firstNameA = a.firstName.toLowerCase();
+    const firstNameB = b.firstName.toLowerCase();
+    return firstNameA.localeCompare(firstNameB);
+  });
+
+  displayList();
+}
+
+function sortStudentsByLastName() {
+  allStudents.sort((a, b) => {
+    const lastNameA = a.lastName.toLowerCase();
+    const lastNameB = b.lastName.toLowerCase();
+    return lastNameA.localeCompare(lastNameB);
+  });
+
+  displayList();
+}
+
+
+
+//FILTER
+
+
+//SORT
+
+// document.getElementById('sortByFirstName').addEventListener('click', sortStudentsByFirstName);
+// document.getElementById('sortByLastName').addEventListener('click', sortStudentsByLastName);
+// document.getElementById('sortByHouse').addEventListener('click', sortStudentsByHouse);
+
+// // Add event listeners to the house buttons
+// const houseButtons = document.querySelectorAll('.houseButton');
+// houseButtons.forEach(button => {
+//   button.addEventListener('click', () => {
+//     const house = button.getAttribute('data-house');
+//     filterStudentsByHouse(house);
+//   });
+// });
+
+// function sortStudentsByFirstName() {
+//   allStudents.sort((a, b) => a.firstName.localeCompare(b.firstName));
+//   displayList();
+// }
+
+// function sortStudentsByLastName() {
+//   allStudents.sort((a, b) => a.lastName.localeCompare(b.lastName));
+//   displayList();
+// }
+
+// function sortStudentsByHouse() {
+//   allStudents.sort((a, b) => a.house.localeCompare(b.house));
+//   displayList();
+// }
+
+// function filterStudentsByHouse(house) {
+//   const filteredStudents = allStudents.filter(student => student.house === house);
+//   displayFilteredStudents(filteredStudents);
+// }
+
+// function displayFilteredStudents(filteredStudents) {
+//   document.querySelector("#list tbody").innerHTML = "";
+
+//   filteredStudents.forEach(displayStudent);
+// }
+
+// function displayList() {
+//   document.querySelector("#list tbody").innerHTML = "";
+
+//   allStudents.forEach(displayStudent);
+// }
