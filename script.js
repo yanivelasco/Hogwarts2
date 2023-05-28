@@ -269,15 +269,24 @@ function countStudents() {
 }
 
 
-function displayList() {
+function displayList(sortBy) {
   document.querySelector("#list tbody").innerHTML = "";
 
-  allStudents.forEach(displayStudent);
+  let sortedStudents = [...allStudents]; // Create a copy of allStudents array
+
+  if (sortBy === "firstName") {
+    sortedStudents.sort((a, b) => a.firstName.localeCompare(b.firstName));
+  } else if (sortBy === "lastName") {
+    sortedStudents.sort((a, b) => a.lastName.localeCompare(b.lastName));
+  }
+
+  sortedStudents.forEach(displayStudent);
 
   const totalCount = allStudents.length;
   const houseCounts = countStudents();
-  displayStudentCounts(totalCount, houseCounts);
+  displayStudentCounts(sortedStudents.length, totalCount, houseCounts);
 }
+
 
 function displayStudentCounts(displayedCount, totalCount, counts) {
   const countContainer = document.querySelector("#studentCounts");
@@ -306,7 +315,15 @@ function start() {
 
   const searchInput = document.getElementById("searchInput");
   searchInput.addEventListener("input", performSearch);
+
+  const sortFirstNameBtn = document.getElementById("sortFirstNameBtn");
+  sortFirstNameBtn.addEventListener("click", () => displayList("firstName"));
+
+  const sortLastNameBtn = document.getElementById("sortLastNameBtn");
+  sortLastNameBtn.addEventListener("click", () => displayList("lastName"));
 }
+
+
 
 
 
