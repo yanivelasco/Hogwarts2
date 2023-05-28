@@ -6,11 +6,11 @@ window.addEventListener("DOMContentLoaded", start);
 
 const allStudents = [];
 
-function start() {
-  console.log("ready");
+// function start() {
+//   console.log("ready");
 
-  loadJSON();
-}
+//   loadJSON();
+// }
 
 function loadJSON() {
   fetch("students.json")
@@ -169,11 +169,11 @@ function prepareObjects(jsonData) {
   displayList();
 }
 
-function displayList() {
-  document.querySelector("#list tbody").innerHTML = "";
+// function displayList() {
+//   document.querySelector("#list tbody").innerHTML = "";
 
-  allStudents.forEach(displayStudent);
-}
+//   allStudents.forEach(displayStudent);
+// }
 
 //__________________________________________________________CLONING_______________________________________________________________________________________________
 
@@ -200,7 +200,6 @@ function displayStudent(student) {
 
 
 
-//__________________________________________________________MASONRY GRID_______________________________________________________________________________________________
 
 
 
@@ -209,14 +208,14 @@ function displayStudent(student) {
 
 //SEARCH
 
-function start() {
-  console.log("ready");
+// function start() {
+//   console.log("ready");
 
-  loadJSON();
+//   loadJSON();
 
-  const searchInput = document.getElementById("searchInput");
-  searchInput.addEventListener("input", performSearch);
-}
+//   const searchInput = document.getElementById("searchInput");
+//   searchInput.addEventListener("input", performSearch);
+// }
 
 function performSearch() {
   const searchInput = document.getElementById("searchInput").value.toLowerCase();
@@ -271,13 +270,18 @@ function displayList() {
 
   allStudents.forEach(displayStudent);
 
+  const totalCount = allStudents.length;
   const houseCounts = countStudents();
-  displayStudentCounts(houseCounts);
+  displayStudentCounts(totalCount, houseCounts);
 }
 
-function displayStudentCounts(counts) {
+function displayStudentCounts(displayedCount, totalCount, counts) {
   const countContainer = document.querySelector("#studentCounts");
   countContainer.innerHTML = "";
+
+  const totalCountElement = document.createElement("div");
+  totalCountElement.textContent = `Showing ${displayedCount} of ${totalCount} students`;
+  countContainer.appendChild(totalCountElement);
 
   for (const house in counts) {
     const countElement = document.createElement("div");
@@ -349,7 +353,17 @@ function displayFilteredStudents(filteredStudents) {
   listContainer.innerHTML = "";
 
   filteredStudents.forEach(displayStudent);
+
+  const displayedCount = filteredStudents.length;
+  const totalCount = allStudents.length;
+  const houseCounts = countStudents(filteredStudents);
+  displayStudentCounts(displayedCount, totalCount, houseCounts);
 }
+
+
+
+//STUDENT DISPLAYED
+
 
 
 
