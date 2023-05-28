@@ -17,9 +17,13 @@ function loadJSON() {
     .then(response => response.json())
     .then(jsonData => {
       prepareObjects(jsonData);
+      displayList();
+      const totalCount = allStudents.length;
+      const houseCounts = countStudents();
+      displayStudentCounts(totalCount, totalCount, houseCounts);
     });
-  displayList();
 }
+
 
 //__________________________________________________________CLEANING DATA _______________________________________________________________________________________________
 
@@ -293,8 +297,8 @@ function displayStudentCounts(displayedCount, totalCount, counts) {
 
 
 
-// SORT 
 
+// SORT 
 function start() {
   console.log("ready");
 
@@ -302,33 +306,8 @@ function start() {
 
   const searchInput = document.getElementById("searchInput");
   searchInput.addEventListener("input", performSearch);
-
-  const sortFirstNameBtn = document.getElementById("sortFirstNameBtn");
-  sortFirstNameBtn.addEventListener("click", sortStudentsByFirstName);
-
-  const sortLastNameBtn = document.getElementById("sortLastNameBtn");
-  sortLastNameBtn.addEventListener("click", sortStudentsByLastName);
 }
 
-function sortStudentsByFirstName() {
-  allStudents.sort((a, b) => {
-    const firstNameA = a.firstName.toLowerCase();
-    const firstNameB = b.firstName.toLowerCase();
-    return firstNameA.localeCompare(firstNameB);
-  });
-
-  displayList();
-}
-
-function sortStudentsByLastName() {
-  allStudents.sort((a, b) => {
-    const lastNameA = a.lastName.toLowerCase();
-    const lastNameB = b.lastName.toLowerCase();
-    return lastNameA.localeCompare(lastNameB);
-  });
-
-  displayList();
-}
 
 
 
