@@ -329,6 +329,29 @@ function sortStudentsByLastName() {
 
 
 //FILTER
+const gryffindorBtn = document.getElementById("gryffindorBtn");
+const hufflepuffBtn = document.getElementById("hufflepuffBtn");
+const ravenclawBtn = document.getElementById("ravenclawBtn");
+const slytherinBtn = document.getElementById("slytherinBtn");
+
+gryffindorBtn.addEventListener("click", filterStudentsByHouse.bind(null, "Gryffindor"));
+hufflepuffBtn.addEventListener("click", filterStudentsByHouse.bind(null, "Hufflepuff"));
+ravenclawBtn.addEventListener("click", filterStudentsByHouse.bind(null, "Ravenclaw"));
+slytherinBtn.addEventListener("click", filterStudentsByHouse.bind(null, "Slytherin"));
+
+function filterStudentsByHouse(house) {
+  const filteredStudents = allStudents.filter(student => student.house === house);
+  displayFilteredStudents(filteredStudents);
+}
+
+function displayFilteredStudents(filteredStudents) {
+  const listContainer = document.querySelector("#list tbody");
+  listContainer.innerHTML = "";
+
+  filteredStudents.forEach(displayStudent);
+}
+
+
 
 
 //SORT
