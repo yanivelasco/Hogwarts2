@@ -439,11 +439,18 @@ function openModal(student) {
   });
 
   const inquisitorialBtn = modal.querySelector("#inquisitorialBtn");
+  
   if (student.bloodStatus !== "Pure-Blood" && !(student.bloodStatus === "Half-Blood" && student.house === "Slytherin")) {
     // Disable the button and apply red styling
     inquisitorialBtn.disabled = true;
-    inquisitorialBtn.classList.add("not-eligible");
+    inquisitorialBtn.classList.add("not-eligible", "tooltip");
+    
+    // Add title attribute for tooltip
+    inquisitorialBtn.innerHTML += '<span class="tooltip-text">You can only add pure-blood students or students from Slytherin.</span>';
+  } else {
+    inquisitorialBtn.classList.remove("tooltip");
   }
+  
 
   inquisitorialBtn.addEventListener("click", () => {
     toggleInquisitorialSquad(student);
@@ -498,10 +505,7 @@ function openModal(student) {
       }
     }
   }
-  
-  
-  
-  
+
   
   
   const removeStudentButton = document.getElementById('removeStudentButton');
