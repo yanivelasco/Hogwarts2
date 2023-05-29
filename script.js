@@ -226,8 +226,16 @@ function displayFilteredStudents(filteredStudents) {
   const listContainer = document.querySelector("#list tbody");
   listContainer.innerHTML = "";
 
-  filteredStudents.forEach(displayStudent);
+  filteredStudents.forEach(student => {
+    displayStudent(student);
+  });
+
+  const displayedCount = filteredStudents.length; // Update displayedCount
+  const totalCount = allStudents.length;
+  const houseCounts = countStudents();
+  displayStudentCounts(displayedCount, totalCount, houseCounts);
 }
+
 
 
 //STUDENTS COUNT
@@ -286,27 +294,7 @@ function displayList(sortBy) {
 
 
 
-//DISPAYED STUDENTS
 
-function displayStudentCounts(displayedCount, totalCount, counts) {
-  const countContainer = document.querySelector("#studentCounts");
-  countContainer.innerHTML = "";
-
-  const totalCountElement = document.createElement("div");
-  totalCountElement.textContent = `Showing ${displayedCount} of ${totalCount} students`;
-  countContainer.appendChild(totalCountElement);
-
-  for (const house in counts) {
-    const countElement = document.createElement("div");
-    countElement.textContent = `${house}: ${counts[house]}`;
-    countContainer.appendChild(countElement);
-  }
-
-  const inquisitorialCountElement = document.createElement("div");
-  const inquisitorialCount = inquisitorialSquad.length;
-  inquisitorialCountElement.textContent = `Inquisitorial Squad: ${inquisitorialCount}`;
-  countContainer.appendChild(inquisitorialCountElement);
-}
 
 
 
@@ -372,6 +360,8 @@ function displayFilteredStudents(filteredStudents) {
 
 // Global variable to store filtered and sorted students
 let filteredAndSortedStudents = [];
+let prefects = [];
+
 
 // Filter function (updated)
 function filterStudentsByHouse(house) {
@@ -436,6 +426,8 @@ function openModal(student) {
     <p><strong>Blood Status:</strong> ${student.bloodStatus}</p>
     <p id="inquisitorialSquadStatus"><strong>Inquisitorial Squad:</strong> ${inquisitorialSquad.includes(student) ? 'Yes' : 'No'}</p>
     <button id="inquisitorialBtn">${student.inquisitorialSquad ? "Remove from Inquisitorial Squad" : "Add to Inquisitorial Squad"}</button>
+    <p id="prefectStatus"><strong>Prefect:</strong> ${student.prefect ? 'Yes' : 'No'}</p>
+    <button id="prefectBtn">${student.prefect ? "Remove from Prefects" : "Add to Prefects"}</button>
   `;
 
   modal.style.display = "block";
@@ -444,6 +436,12 @@ function openModal(student) {
   closeModalBtn.addEventListener("click", () => {
     closeModal(modal);
   });
+
+  const prefectBtn = modal.querySelector("#prefectBtn");
+prefectBtn.addEventListener("click", () => {
+  togglePrefect(student);
+});
+
 
   const inquisitorialBtn = modal.querySelector("#inquisitorialBtn");
   
@@ -513,13 +511,19 @@ function openModal(student) {
       } else {
         console.log(`${student.firstName} ${student.lastName} cannot be added to the Inquisitorial Squad.`);
       }
+      updateStudentCount();
     }
+  
     // Update displayed student counts
     const displayedCount = filteredAndSortedStudents.length;
     const totalCount = allStudents.length;
     const houseCounts = countStudents(filteredAndSortedStudents);
     displayStudentCounts(displayedCount, totalCount, houseCounts);
   }
+  
+  
+  
+  
   
   
 
@@ -563,4 +567,82 @@ document.querySelector("#studentCounts").addEventListener('click', event => {
 });
 
 
+//PREFECTS
+
+function togglePrefect(student) {
+  const isInPrefects = prefects.includes(student);
+  const prefectBtn = document.querySelector("#prefectBtn");
+  const prefectStatus = document.querySelector("#prefectStatus");
+
+  if (isInPrefects) {
+    // Remove student from the prefects
+    const index = prefects.indexOf(student);
+    prefects.splice(index, 1);
+    prefectBtn.innerText = "Add to Prefects";
+    prefectStatus.innerText = "Prefect: No";
+  } else {
+    const sameHousePrefects = prefects.filter(prefect => prefect.house === student.house);
+    if (sameHousePrefects.length < 2) {
+      prefects.push(student);
+      prefectBtn.innerText = "Remove from Prefects";
+      prefectStatus.innerText = "Prefect: Yes";
+    } else {
+      // Disable the button and apply red styling
+      prefectBtn.disabled = true;
+      prefectBtn.classList.add("not-eligible", "tooltip");
+      
+      // Add title attribute for tooltip
+      prefectBtn.innerHTML += '<span class="tooltip-text">There are already two prefects from the same house.</span>';
+    }
+    updateStudentCount();
+  }
+}
+
+  // Update modal
+  openModal(student);
+
+
+
+function isPrefect(student) {
+  return prefects.includes(student);
+}
+
+
+//UPDATEEEEEE
+
+function updateStudentCount() {
+  const displayedCount = filteredAndSortedStudents.length;
+  const totalCount = allStudents.length;
+  const houseCounts = countStudents(filteredAndSortedStudents);
+  displayStudentCounts(displayedCount, totalCount, houseCounts);
   
+  // Display the updated student count in the element
+  const countContainer = document.querySelector("#studentCounts");
+  const totalCountElement = countContainer.querySelector("div:first-child");
+  totalCountElement.textContent = `Showing ${displayedCount} of ${totalCount} students`;
+}
+
+
+//DISPAYED STUDENTS
+
+function displayStudentCounts(displayedCount, totalCount, counts) {
+  const countContainer = document.querySelector("#studentCounts");
+  countContainer.innerHTML = "";
+
+  const totalCountElement = document.createElement("div");
+  totalCountElement.textContent = `Showing ${displayedCount} of ${totalCount} students`;
+  countContainer.appendChild(totalCountElement);
+
+  for (const house in counts) {
+    const countElement = document.createElement("div");
+    countElement.textContent = `${house}: ${counts[house]}`;
+    countContainer.appendChild(countElement);
+  }
+
+  const inquisitorialCount = inquisitorialSquad.length;
+  const inquisitorialCountElement = document.createElement("div");
+  inquisitorialCountElement.textContent = `Inquisitorial Squad: ${inquisitorialCount}`;
+  countContainer.appendChild(inquisitorialCountElement);
+}
+
+
