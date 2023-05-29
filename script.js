@@ -428,6 +428,7 @@ function openModal(student) {
     <img src="${student.image.src}" alt="${student.firstName}'s photo">
     <p><strong>House:</strong> ${student.house}</p>
     <p><strong>Blood Status:</strong> ${student.bloodStatus}</p>
+    <p id="inquisitorialSquadStatus"><strong>Inquisitorial Squad:</strong> ${inquisitorialSquad.includes(student) ? 'Yes' : 'No'}</p>
     <button id="inquisitorialBtn">${student.inquisitorialSquad ? "Remove from Inquisitorial Squad" : "Add to Inquisitorial Squad"}</button>
   `;
 
@@ -487,6 +488,7 @@ function openModal(student) {
   function toggleInquisitorialSquad(student) {
     const isInInquisitorialSquad = inquisitorialSquad.includes(student);
     const inquisitorialBtn = document.querySelector("#inquisitorialBtn");
+    const inquisitorialSquadStatus = document.querySelector("#inquisitorialSquadStatus");
   
     if (isInInquisitorialSquad) {
       // Remove student from the inquisitorial squad
@@ -494,17 +496,20 @@ function openModal(student) {
       inquisitorialSquad.splice(index, 1);
       console.log(`${student.firstName} ${student.lastName} removed from the Inquisitorial Squad.`);
       inquisitorialBtn.innerText = "Add to Inquisitorial Squad";
+      inquisitorialSquadStatus.innerText = "Inquisitorial Squad: No";
     } else {
       // Only add student to the squad if they aren't already in it
       if (!isInInquisitorialSquad && (student.bloodStatus === 'Pure-Blood' || (student.bloodStatus === 'Half-Blood' && student.house === 'Slytherin'))) {
         inquisitorialSquad.push(student);
         console.log(`${student.firstName} ${student.lastName} added to the Inquisitorial Squad.`);
         inquisitorialBtn.innerText = "Remove from Inquisitorial Squad";
+        inquisitorialSquadStatus.innerText = "Inquisitorial Squad: Yes";
       } else {
         console.log(`${student.firstName} ${student.lastName} cannot be added to the Inquisitorial Squad.`);
       }
     }
   }
+  
 
   
   
