@@ -301,7 +301,13 @@ function displayStudentCounts(displayedCount, totalCount, counts) {
     countElement.textContent = `${house}: ${counts[house]}`;
     countContainer.appendChild(countElement);
   }
+
+  const inquisitorialCountElement = document.createElement("div");
+  const inquisitorialCount = inquisitorialSquad.length;
+  inquisitorialCountElement.textContent = `Inquisitorial Squad: ${inquisitorialCount}`;
+  countContainer.appendChild(inquisitorialCountElement);
 }
+
 
 
 
@@ -508,7 +514,13 @@ function openModal(student) {
         console.log(`${student.firstName} ${student.lastName} cannot be added to the Inquisitorial Squad.`);
       }
     }
+    // Update displayed student counts
+    const displayedCount = filteredAndSortedStudents.length;
+    const totalCount = allStudents.length;
+    const houseCounts = countStudents(filteredAndSortedStudents);
+    displayStudentCounts(displayedCount, totalCount, houseCounts);
   }
+  
   
 
   
@@ -522,5 +534,33 @@ function openModal(student) {
     removeStudentButton.style.display = 'none';
   }
   removeStudentButton.addEventListener('click', removeStudentFromSquad);
+
+  // Function to display the Inquisitorial Squad students
+function displayInquisitorialSquad() {
+  // Filter Inquisitorial Squad students
+  const inquisitorialStudents = allStudents.filter(student => inquisitorialSquad.includes(student));
+
+  // Sort by first name
+  inquisitorialStudents.sort((a, b) => a.firstName.localeCompare(b.firstName));
+
+  // Display students
+  const listContainer = document.querySelector("#list tbody");
+  listContainer.innerHTML = "";
+
+  inquisitorialStudents.forEach(displayStudent);
+
+  const displayedCount = inquisitorialStudents.length;
+  const totalCount = allStudents.length;
+  const houseCounts = countStudents(inquisitorialStudents);
+  displayStudentCounts(displayedCount, totalCount, houseCounts);
+}
+
+// Add click event to Inquisitorial Squad displayed count
+document.querySelector("#studentCounts").addEventListener('click', event => {
+  if (event.target.textContent.startsWith('Inquisitorial Squad: ')) {
+    displayInquisitorialSquad();
+  }
+});
+
 
   
