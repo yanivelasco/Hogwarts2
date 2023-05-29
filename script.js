@@ -6,11 +6,6 @@ window.addEventListener("DOMContentLoaded", start);
 
 const allStudents = [];
 
-// function start() {
-//   console.log("ready");
-
-//   loadJSON();
-// }
 
 function loadJSON() {
   fetch("students.json")
@@ -54,15 +49,7 @@ function prepareObjects(jsonData) {
 
     console.log(student.firstName);
 
-    // LEANNE ?? _______________________________________________________________________________________________
-     // // If the fullname is Leanne, just show the fullname
-    // if (fullnameString === "Leanne") {
-    //   result = fullnameString;
-    // }  
 
-    //   if (lastnameL === "leanne") {
-    //   imageSrc.src = "";
-    // }
 
     // MIDDLE NAME_______________________________________________________________________________________________
 
@@ -173,11 +160,6 @@ function prepareObjects(jsonData) {
   displayList();
 }
 
-// function displayList() {
-//   document.querySelector("#list tbody").innerHTML = "";
-
-//   allStudents.forEach(displayStudent);
-// }
 
 //__________________________________________________________CLONING_______________________________________________________________________________________________
 
@@ -198,28 +180,8 @@ function displayStudent(student) {
 
 
 
-//__________________________________________________________FILTER_______________________________________________________________________________________________
-
-
-
-
-
-
-
-
-
-
 
 //SEARCH
-
-// function start() {
-//   console.log("ready");
-
-//   loadJSON();
-
-//   const searchInput = document.getElementById("searchInput");
-//   searchInput.addEventListener("input", performSearch);
-// }
 
 function performSearch() {
   const searchInput = document.getElementById("searchInput").value.toLowerCase();
@@ -237,18 +199,6 @@ function displayFilteredStudents(filteredStudents) {
   filteredStudents.forEach(displayStudent);
 }
 
-
-//MODAL WITH INFO
-
-//HACK
-
-//BLOOD STATUS
-
-//EXPELLING
-
-//PREFECTS
-
-//INQUISITORIAL
 
 //STUDENTS COUNT
 function countStudents() {
@@ -269,10 +219,24 @@ function countStudents() {
 }
 
 
-function displayList(sortBy) {
-  document.querySelector("#list tbody").innerHTML = "";
 
-  let sortedStudents = [...allStudents]; // Create a copy of allStudents array
+
+/////DISPALY----------------
+
+function displayList(sortBy) {
+  const listContainer = document.querySelector("#list tbody");
+  listContainer.innerHTML = "";
+
+  let studentsToDisplay = allStudents; 
+
+  
+  const activeHouse = document.querySelector(".activeHouse");
+  if (activeHouse) {
+    const house = activeHouse.getAttribute("data-house");
+    studentsToDisplay = allStudents.filter(student => student.house === house);
+  }
+
+  let sortedStudents = [...studentsToDisplay];
 
   if (sortBy === "firstName") {
     sortedStudents.sort((a, b) => a.firstName.localeCompare(b.firstName));
@@ -281,12 +245,10 @@ function displayList(sortBy) {
   }
 
   sortedStudents.forEach(displayStudent);
-
-  const totalCount = allStudents.length;
-  const houseCounts = countStudents();
-  displayStudentCounts(sortedStudents.length, totalCount, houseCounts);
 }
 
+
+//DISPAYED STUDENTS
 
 function displayStudentCounts(displayedCount, totalCount, counts) {
   const countContainer = document.querySelector("#studentCounts");
@@ -307,7 +269,7 @@ function displayStudentCounts(displayedCount, totalCount, counts) {
 
 
 
-// SORT 
+// START ---------------------------------- 
 function start() {
   console.log("ready");
 
@@ -316,16 +278,7 @@ function start() {
   const searchInput = document.getElementById("searchInput");
   searchInput.addEventListener("input", performSearch);
 
-  const sortFirstNameBtn = document.getElementById("sortFirstNameBtn");
-  sortFirstNameBtn.addEventListener("click", () => displayList("firstName"));
-
-  const sortLastNameBtn = document.getElementById("sortLastNameBtn");
-  sortLastNameBtn.addEventListener("click", () => displayList("lastName"));
 }
-
-
-
-
 
 
 //FILTER
@@ -358,55 +311,7 @@ function displayFilteredStudents(filteredStudents) {
 
 
 
-//STUDENT DISPLAYED
 
 
 
 
-
-//SORT
-
-// document.getElementById('sortByFirstName').addEventListener('click', sortStudentsByFirstName);
-// document.getElementById('sortByLastName').addEventListener('click', sortStudentsByLastName);
-// document.getElementById('sortByHouse').addEventListener('click', sortStudentsByHouse);
-
-// // Add event listeners to the house buttons
-// const houseButtons = document.querySelectorAll('.houseButton');
-// houseButtons.forEach(button => {
-//   button.addEventListener('click', () => {
-//     const house = button.getAttribute('data-house');
-//     filterStudentsByHouse(house);
-//   });
-// });
-
-// function sortStudentsByFirstName() {
-//   allStudents.sort((a, b) => a.firstName.localeCompare(b.firstName));
-//   displayList();
-// }
-
-// function sortStudentsByLastName() {
-//   allStudents.sort((a, b) => a.lastName.localeCompare(b.lastName));
-//   displayList();
-// }
-
-// function sortStudentsByHouse() {
-//   allStudents.sort((a, b) => a.house.localeCompare(b.house));
-//   displayList();
-// }
-
-// function filterStudentsByHouse(house) {
-//   const filteredStudents = allStudents.filter(student => student.house === house);
-//   displayFilteredStudents(filteredStudents);
-// }
-
-// function displayFilteredStudents(filteredStudents) {
-//   document.querySelector("#list tbody").innerHTML = "";
-
-//   filteredStudents.forEach(displayStudent);
-// }
-
-// function displayList() {
-//   document.querySelector("#list tbody").innerHTML = "";
-
-//   allStudents.forEach(displayStudent);
-// }
