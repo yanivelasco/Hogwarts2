@@ -7,6 +7,7 @@ window.addEventListener("DOMContentLoaded", start);
 const allStudents = [];
 
 
+
 function loadJSON() {
   fetch("students.json")
     .then(response => response.json())
@@ -223,13 +224,13 @@ function countStudents() {
 
 /////DISPALY----------------
 
+// Display function (updated)
 function displayList(sortBy) {
   const listContainer = document.querySelector("#list tbody");
   listContainer.innerHTML = "";
 
-  let studentsToDisplay = allStudents; 
+  let studentsToDisplay = allStudents;
 
-  
   const activeHouse = document.querySelector(".activeHouse");
   if (activeHouse) {
     const house = activeHouse.getAttribute("data-house");
@@ -245,7 +246,15 @@ function displayList(sortBy) {
   }
 
   sortedStudents.forEach(displayStudent);
+
+  // Update student count display
+  const displayedCount = sortedStudents.length;
+  const totalCount = allStudents.length;
+  const houseCounts = countStudents(sortedStudents);
+  displayStudentCounts(displayedCount, totalCount, houseCounts);
 }
+
+
 
 
 //DISPAYED STUDENTS
@@ -277,7 +286,11 @@ function start() {
 
   const searchInput = document.getElementById("searchInput");
   searchInput.addEventListener("input", performSearch);
-
+  const sortAllByFirstNameBtn = document.getElementById("sortAllByFirstNameBtn");
+  sortAllByFirstNameBtn.addEventListener("click", sortAllStudentsByFirstName);
+  
+  const sortAllByLastNameBtn = document.getElementById("sortAllByLastNameBtn");
+  sortAllByLastNameBtn.addEventListener("click", sortAllStudentsByLastName);
 }
 
 
@@ -294,6 +307,14 @@ slytherinBtn.addEventListener("click", filterStudentsByHouse.bind(null, "Slyther
 
 function filterStudentsByHouse(house) {
   const filteredStudents = allStudents.filter(student => student.house === house);
+  const sortBy = document.querySelector(".activeSort")?.getAttribute("data-sort");
+  
+  if (sortBy === "firstName") {
+    filteredStudents.sort((a, b) => a.firstName.localeCompare(b.firstName));
+  } else if (sortBy === "lastName") {
+    filteredStudents.sort((a, b) => a.lastName.localeCompare(b.lastName));
+  }
+  
   displayFilteredStudents(filteredStudents);
 }
 
@@ -311,6 +332,56 @@ function displayFilteredStudents(filteredStudents) {
 
 
 
+
+//SORT
+
+// Global variable to store filtered and sorted students
+let filteredAndSortedStudents = [];
+
+// Filter function (updated)
+function filterStudentsByHouse(house) {
+  const filteredStudents = allStudents.filter(student => student.house === house);
+  filteredAndSortedStudents = [...filteredStudents];
+  displayFilteredStudents(filteredAndSortedStudents);
+}
+
+// Sort buttons
+const sortByFirstNameBtn = document.getElementById("sortByFirstNameBtn");
+const sortByLastNameBtn = document.getElementById("sortByLastNameBtn");
+
+// Add event listeners to the buttons
+sortByFirstNameBtn.addEventListener("click", () => {
+  sortByFirstNameBtn.classList.add("activeSort");
+  sortByLastNameBtn.classList.remove("activeSort");
+  sortFilteredStudents("firstName");
+});
+
+sortByLastNameBtn.addEventListener("click", () => {
+  sortByLastNameBtn.classList.add("activeSort");
+  sortByFirstNameBtn.classList.remove("activeSort");
+  sortFilteredStudents("lastName");
+});
+
+// Helper function to sort filtered students
+function sortFilteredStudents(sortBy) {
+  if (sortBy === "firstName") {
+    filteredAndSortedStudents.sort((a, b) => a.firstName.localeCompare(b.firstName));
+  } else if (sortBy === "lastName") {
+    filteredAndSortedStudents.sort((a, b) => a.lastName.localeCompare(b.lastName));
+  }
+  displayFilteredStudents(filteredAndSortedStudents);
+}
+
+
+function sortAllStudentsByFirstName() {
+  allStudents.sort((a, b) => a.firstName.localeCompare(b.firstName));
+  displayList();
+}
+
+function sortAllStudentsByLastName() {
+  allStudents.sort((a, b) => a.lastName.localeCompare(b.lastName));
+  displayList();
+}
 
 
 
