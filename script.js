@@ -9,6 +9,7 @@ const allStudents = [];
 
 
 function loadJSON() {
+  
   fetch("students.json")
     .then(response => response.json())
     .then(jsonData => {
@@ -24,7 +25,8 @@ function loadJSON() {
 //__________________________________________________________CLEANING DATA _______________________________________________________________________________________________
 
 
-function prepareObjects(jsonData) {
+async function prepareObjects(jsonData) {
+  const bloodStatusData = await loadBloodStatusData();
   jsonData.forEach(jsonObject => {
     const Student = {
       firstName: "",
@@ -36,6 +38,9 @@ function prepareObjects(jsonData) {
     };
 
     const student = Object.create(Student);
+    
+
+    
 
 
     // FIRST NAME_______________________________________________________________________________________________
@@ -152,6 +157,22 @@ function prepareObjects(jsonData) {
         "images/" + lastnameL.substring(lastnameL.indexOf("-") + 1) + "_" + firstnameL + ".jpg";
     }
 
+
+    // Calculate blood status
+    const { half, pure } = bloodStatusData;
+    const isPureBlood = pure.includes(student.lastName);
+    const isHalfBlood = half.includes(student.lastName);
+
+    if (isPureBlood) {
+      student.bloodStatus = "Pure-Blood";
+    } else if (isHalfBlood) {
+      student.bloodStatus = "Half-Blood";
+    } else {
+      student.bloodStatus = "Muggle";
+    }
+
+    
+
     // ADD TO ALL STUDENTS INTO GLOBAL ARRAY
 
     allStudents.push(student);
@@ -163,7 +184,6 @@ function prepareObjects(jsonData) {
 
 
 //__________________________________________________________CLONING_______________________________________________________________________________________________
-
 function displayStudent(student) {
   const clone = document.querySelector("template#student").content.cloneNode(true);
 
@@ -174,8 +194,14 @@ function displayStudent(student) {
   clone.querySelector("#studentImage").src = student.image.src;
   clone.querySelector("[data-field=house]").textContent = student.house;
 
+  const studentImage = clone.querySelector("#studentImage");
+  studentImage.addEventListener("click", () => {
+    openModal(student);
+  });
+
   document.querySelector("#list tbody").appendChild(clone);
 }
+
 
 
 
@@ -384,5 +410,50 @@ function sortAllStudentsByLastName() {
 }
 
 
+//MODAL STUDENT INFO
+
+function openModal(student) {
+  const modal = document.getElementById("myModal");
+  const modalContent = modal.querySelector(".modal-content");
+  const studentInfo = document.getElementById("studentInfo");
+
+  studentInfo.innerHTML = `
+    <p><strong>First Name:</strong> ${student.firstName}</p>
+    <p><strong>Middle Name:</strong> ${student.middleName}</p>
+    <p><strong>Nick Name:</strong> ${student.nickName}</p>
+    <p><strong>Last Name:</strong> ${student.lastName}</p>
+    <img src="${student.image.src}" alt="${student.firstName}'s photo">
+    <p><strong>House:</strong> ${student.house}</p>
+    <p><strong>Blood Status:</strong> ${student.bloodStatus}</p>
+  `;
+
+  modal.style.display = "block";
+
+  const closeModalBtn = modal.querySelector(".close");
+  closeModalBtn.addEventListener("click", () => {
+    closeModal(modal);
+ 
+  })}
 
 
+  function closeModal(modal) {
+    modal.style.display = "none";
+  }
+  
+  // Add event listener to close the modal when the user clicks outside the modal content
+  window.addEventListener("click", (event) => {
+    const modal = document.getElementById("myModal");
+    if (event.target === modal) {
+      closeModal(modal);
+    }
+  });
+  
+
+  //BLOOD STATUS
+
+  function loadBloodStatusData() {
+    return fetch("https://petlatkea.dk/2021/hogwarts/families.json")
+      .then(response => response.json())
+      .then(data => data);
+  }
+  
