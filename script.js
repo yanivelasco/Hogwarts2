@@ -570,20 +570,21 @@ document.querySelector("#studentCounts").addEventListener('click', event => {
 //PREFECTS
 
 function togglePrefect(student) {
-  const isInPrefects = prefects.includes(student);
   const prefectBtn = document.querySelector("#prefectBtn");
   const prefectStatus = document.querySelector("#prefectStatus");
 
-  if (isInPrefects) {
+  if (student.prefect) {
     // Remove student from the prefects
     const index = prefects.indexOf(student);
     prefects.splice(index, 1);
+    student.prefect = false; // Updating the student's prefect status
     prefectBtn.innerText = "Add to Prefects";
     prefectStatus.innerText = "Prefect: No";
   } else {
     const sameHousePrefects = prefects.filter(prefect => prefect.house === student.house);
     if (sameHousePrefects.length < 2) {
       prefects.push(student);
+      student.prefect = true; // Updating the student's prefect status
       prefectBtn.innerText = "Remove from Prefects";
       prefectStatus.innerText = "Prefect: Yes";
     } else {
@@ -597,6 +598,34 @@ function togglePrefect(student) {
     updateStudentCount();
   }
 }
+
+// Add click event to "Prefects" count
+document.querySelector("#studentCounts").addEventListener('click', event => {
+  if (event.target.textContent.startsWith('Prefects: ')) {
+    displayPrefects();
+  }
+});
+
+function displayPrefects() {
+  // Filter prefect students
+  const prefectStudents = allStudents.filter(student => student.prefect);
+
+  // Sort by first name
+  prefectStudents.sort((a, b) => a.firstName.localeCompare(b.firstName));
+
+  // Display students
+  const listContainer = document.querySelector("#list tbody");
+  listContainer.innerHTML = "";
+
+  prefectStudents.forEach(displayStudent);
+
+  const displayedCount = prefectStudents.length;
+  const totalCount = allStudents.length;
+  const houseCounts = countStudents(prefectStudents);
+  displayStudentCounts(displayedCount, totalCount, houseCounts);
+}
+
+
 
   // Update modal
   openModal(student);
@@ -643,6 +672,11 @@ function displayStudentCounts(displayedCount, totalCount, counts) {
   const inquisitorialCountElement = document.createElement("div");
   inquisitorialCountElement.textContent = `Inquisitorial Squad: ${inquisitorialCount}`;
   countContainer.appendChild(inquisitorialCountElement);
+
+  const prefectCount = prefects.length; // Get the prefect count
+  const prefectCountElement = document.createElement("div");
+  prefectCountElement.textContent = `Prefects: ${prefectCount}`;
+  countContainer.appendChild(prefectCountElement); // Append the prefect count element
 }
 
 
