@@ -476,25 +476,32 @@ function openModal(student) {
 
   //INQ SQUAD
 
+  
   function toggleInquisitorialSquad(student) {
     const isInInquisitorialSquad = inquisitorialSquad.includes(student);
+    const inquisitorialBtn = document.querySelector("#inquisitorialBtn");
   
     if (isInInquisitorialSquad) {
       // Remove student from the inquisitorial squad
       const index = inquisitorialSquad.indexOf(student);
       inquisitorialSquad.splice(index, 1);
       console.log(`${student.firstName} ${student.lastName} removed from the Inquisitorial Squad.`);
+      inquisitorialBtn.innerText = "Add to Inquisitorial Squad";
     } else {
-      // Add student to the inquisitorial squad
-      if (student.bloodStatus === 'Pure-Blood' || (student.bloodStatus === 'Half-Blood' && student.house === 'Slytherin')) {
+      // Only add student to the squad if they aren't already in it
+      if (!isInInquisitorialSquad && (student.bloodStatus === 'Pure-Blood' || (student.bloodStatus === 'Half-Blood' && student.house === 'Slytherin'))) {
         inquisitorialSquad.push(student);
         console.log(`${student.firstName} ${student.lastName} added to the Inquisitorial Squad.`);
-        removeStudentButton.style.display = 'inline-block';
+        inquisitorialBtn.innerText = "Remove from Inquisitorial Squad";
       } else {
         console.log(`${student.firstName} ${student.lastName} cannot be added to the Inquisitorial Squad.`);
       }
     }
   }
+  
+  
+  
+  
   
   
   const removeStudentButton = document.getElementById('removeStudentButton');
