@@ -7,6 +7,7 @@ window.addEventListener("DOMContentLoaded", start);
 const allStudents = [];
 const inquisitorialSquad = []; // Array to store the members of the Inquisitorial Squad
 let expelledStudents = [];
+const modal = document.getElementById("myModal");
 
 
 
@@ -202,6 +203,12 @@ function displayStudent(student) {
   const studentImage = clone.querySelector("#studentImage");
   studentImage.addEventListener("click", () => {
     openModal(student);
+
+    if (student.expelled) {
+      return; // Skip expelled students
+    }
+  
+    const clone = document.querySelector("template#student").content.cloneNode(true); 
   });
 
   document.querySelector("#list tbody").appendChild(clone);
@@ -413,7 +420,7 @@ function sortAllStudentsByLastName() {
 
 //MODAL STUDENT INFO
 
-const modal = document.getElementById("myModal");
+
 
 function openModal(student) {
   const modal = document.getElementById("myModal");
@@ -747,6 +754,7 @@ function expelStudent(student) {
   const index = allStudents.indexOf(student);
   if (index > -1) {
     allStudents.splice(index, 1);
+    
   }
 
   // Update student's expelled status
@@ -780,11 +788,13 @@ function expelStudent(student) {
   console.log(`The student ${student.firstName} ${student.lastName} has been expelled.`);
   closeModal(modal);
   updateStudentCount();
+
+  displayList();
+
 }
 
 
 // Add event listener for expelling a student
-
 
 
 function showExpelledStudents() {
@@ -796,7 +806,7 @@ function showExpelledStudents() {
   // Filter out the unique expelled students
   const uniqueExpelledStudents = expelledStudents.filter(
     (student, index, self) =>
-      index === self.findIndex((s) => s.id === student.id)
+      index === self.findIndex((s) => s === student)
   );
 
   uniqueExpelledStudents.forEach(displayStudent);
@@ -808,6 +818,7 @@ function showExpelledStudents() {
 
   displayStudentCounts(displayedCount, totalCount, houseCounts, expelledCount);
 }
+
 
 
 
