@@ -6,6 +6,8 @@ window.addEventListener("DOMContentLoaded", start);
 
 const allStudents = [];
 const inquisitorialSquad = []; // Array to store the members of the Inquisitorial Squad
+let expelledStudents = [];
+
 
 
 
@@ -411,6 +413,8 @@ function sortAllStudentsByLastName() {
 
 //MODAL STUDENT INFO
 
+const modal = document.getElementById("myModal");
+
 function openModal(student) {
   const modal = document.getElementById("myModal");
   const modalContent = modal.querySelector(".modal-content");
@@ -430,6 +434,8 @@ function openModal(student) {
     <button id="inquisitorialBtn">${student.inquisitorialSquad ? "Remove from Inquisitorial Squad" : "Add to Inquisitorial Squad"}</button>
     <p id="prefectStatus"><strong>Prefect:</strong> ${student.prefect ? 'Yes' : 'No'}</p>
     <button id="prefectBtn">${student.prefect ? "Remove from Prefects" : "Add to Prefects"}</button>
+      <button id="expelStudentBtn">Expel Student</button>
+    
   `;
 
   modal.style.display = "block";
@@ -446,7 +452,13 @@ function openModal(student) {
   const prefectBtn = modal.querySelector("#prefectBtn");
 prefectBtn.addEventListener("click", () => {
   togglePrefect(student);
+
+  
 });
+
+const expelStudentBtn = modal.querySelector("#expelStudentBtn");
+  expelStudentBtn.addEventListener("click", expelStudent.bind(null, student));
+
 
 
   const inquisitorialBtn = modal.querySelector("#inquisitorialBtn");
@@ -687,7 +699,7 @@ function updateStudentCount() {
 
 //DISPAYED STUDENTS
 
-function displayStudentCounts(displayedCount, totalCount, counts) {
+function displayStudentCounts(displayedCount, totalCount, counts, expelledCount = 0) {
   const countContainer = document.querySelector("#studentCounts");
   countContainer.innerHTML = "";
 
@@ -706,10 +718,102 @@ function displayStudentCounts(displayedCount, totalCount, counts) {
   inquisitorialCountElement.textContent = `Inquisitorial Squad: ${inquisitorialCount}`;
   countContainer.appendChild(inquisitorialCountElement);
 
-  const prefectCount = prefects.length; // Get the prefect count
+  const prefectCount = prefects.length;
   const prefectCountElement = document.createElement("div");
   prefectCountElement.textContent = `Prefects: ${prefectCount}`;
-  countContainer.appendChild(prefectCountElement); // Append the prefect count element
+  countContainer.appendChild(prefectCountElement);
+
+  // Adding the count for expelled students
+  const expelledCountElement = document.createElement("div");
+  expelledCountElement.textContent = `Expelled: ${expelledCount}`;
+  countContainer.appendChild(expelledCountElement);
 }
 
 
+
+//EXPEL
+
+function expelStudent(student) {
+  // Check if the student is already in the expelledStudents array
+  if (!expelledStudents.includes(student)) {
+    // Add student to the expelled students array
+    expelledStudents.push(student);
+  } else {
+    console.log("Attempted to expel a student who was already expelled: ", student);
+    return;  // If student is already expelled, don't continue
+  }
+
+  // Remove student from the allStudents array
+  const index = allStudents.indexOf(student);
+  if (index > -1) {
+    allStudents.splice(index, 1);
+  }
+
+  // Update student's expelled status
+  student.expelled = true;
+
+  // Add 'expelled' class to the student's element
+  const studentElement = document.getElementById(student.id);
+  if (studentElement) {
+    studentElement.classList.add('expelled');
+  }
+
+
+
+
+  updateStudentCount(); // you should also adjust your student counts to reflect this change
+
+
+  // Remove student from inquisitorialSquad and prefects if they are in these lists
+  const inquisitorialIndex = inquisitorialSquad.indexOf(student);
+  if (inquisitorialIndex > -1) {
+    inquisitorialSquad.splice(inquisitorialIndex, 1);
+  }
+
+  const prefectIndex = prefects.indexOf(student);
+  if (prefectIndex > -1) {
+    prefects.splice(prefectIndex, 1);
+  }
+
+  // Add student to expelledStudents
+  expelledStudents.push(student);
+  console.log(`The student ${student.firstName} ${student.lastName} has been expelled.`);
+  closeModal(modal);
+  updateStudentCount();
+}
+
+
+// Add event listener for expelling a student
+
+
+
+function showExpelledStudents() {
+  const listContainer = document.querySelector("#list tbody");
+
+  // Clear listContainer
+  listContainer.innerHTML = "";
+
+  // Filter out the unique expelled students
+  const uniqueExpelledStudents = expelledStudents.filter(
+    (student, index, self) =>
+      index === self.findIndex((s) => s.id === student.id)
+  );
+
+  uniqueExpelledStudents.forEach(displayStudent);
+
+  const displayedCount = uniqueExpelledStudents.length;
+  const totalCount = allStudents.length;
+  const houseCounts = countStudents(uniqueExpelledStudents);
+  const expelledCount = uniqueExpelledStudents.length;
+
+  displayStudentCounts(displayedCount, totalCount, houseCounts, expelledCount);
+}
+
+
+
+
+
+
+
+const showExpelledBtn = document.getElementById("showExpelledBtn");
+showExpelledBtn.addEventListener("click", showExpelledStudents);
