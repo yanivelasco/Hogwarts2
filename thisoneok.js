@@ -1,4 +1,4 @@
- "use strict";
+"use strict";
 
 //__________________________________________________________FETCH AND PREPARE DATA _______________________________________________________________________________________________
 
@@ -211,7 +211,7 @@ function displayStudent(student) {
 
 
 
-//SEARCH_______________________________________________________________
+//SEARCH
 
 function performSearch() {
   const searchInput = document.getElementById("searchInput").value.toLowerCase();
@@ -238,7 +238,86 @@ function displayFilteredStudents(filteredStudents) {
 
 
 
-//FILTER________________________________________
+//STUDENTS COUNT
+function countStudents() {
+  const houseCounts = {
+    Gryffindor: 0,
+    Hufflepuff: 0,
+    Ravenclaw: 0,
+    Slytherin: 0,
+  };
+
+  allStudents.forEach(student => {
+    houseCounts[student.house]++;
+  });
+
+  houseCounts.total = allStudents.length;
+
+  return houseCounts;
+}
+
+
+
+
+/////DISPALY----------------
+
+// Display function (updated)
+function displayList(sortBy) {
+  const listContainer = document.querySelector("#list tbody");
+  listContainer.innerHTML = "";
+
+  let studentsToDisplay = allStudents;
+
+  const activeHouse = document.querySelector(".activeHouse");
+  if (activeHouse) {
+    const house = activeHouse.getAttribute("data-house");
+    studentsToDisplay = allStudents.filter(student => student.house === house);
+  }
+
+  let sortedStudents = [...studentsToDisplay];
+
+  if (sortBy === "firstName") {
+    sortedStudents.sort((a, b) => a.firstName.localeCompare(b.firstName));
+  } else if (sortBy === "lastName") {
+    sortedStudents.sort((a, b) => a.lastName.localeCompare(b.lastName));
+  }
+
+  sortedStudents.forEach(displayStudent);
+
+  // Update student count display
+  const displayedCount = sortedStudents.length;
+  const totalCount = allStudents.length;
+  const houseCounts = countStudents(sortedStudents);
+  displayStudentCounts(displayedCount, totalCount, houseCounts);
+}
+
+
+
+
+
+
+
+
+
+
+
+// START ---------------------------------- 
+function start() {
+  console.log("ready");
+
+  loadJSON();
+
+  const searchInput = document.getElementById("searchInput");
+  searchInput.addEventListener("input", performSearch);
+  const sortAllByFirstNameBtn = document.getElementById("sortAllByFirstNameBtn");
+  sortAllByFirstNameBtn.addEventListener("click", sortAllStudentsByFirstName);
+  
+  const sortAllByLastNameBtn = document.getElementById("sortAllByLastNameBtn");
+  sortAllByLastNameBtn.addEventListener("click", sortAllStudentsByLastName);
+}
+
+
+//FILTER
 const gryffindorBtn = document.getElementById("gryffindorBtn");
 const hufflepuffBtn = document.getElementById("hufflepuffBtn");
 const ravenclawBtn = document.getElementById("ravenclawBtn");
@@ -251,13 +330,13 @@ slytherinBtn.addEventListener("click", filterStudentsByHouse.bind(null, "Slyther
 
 function filterStudentsByHouse(house) {
   const filteredStudents = allStudents.filter(student => student.house === house);
-  // const sortBy = document.querySelector(".activeSort")?.getAttribute("data-sort");
+  const sortBy = document.querySelector(".activeSort")?.getAttribute("data-sort");
   
-  // if (sortBy === "firstName") {
-  //   filteredStudents.sort((a, b) => a.firstName.localeCompare(b.firstName));
-  // } else if (sortBy === "lastName") {
-  //   filteredStudents.sort((a, b) => a.lastName.localeCompare(b.lastName));
-  // }
+  if (sortBy === "firstName") {
+    filteredStudents.sort((a, b) => a.firstName.localeCompare(b.firstName));
+  } else if (sortBy === "lastName") {
+    filteredStudents.sort((a, b) => a.lastName.localeCompare(b.lastName));
+  }
   
   displayFilteredStudents(filteredStudents);
 }
@@ -280,57 +359,57 @@ function displayFilteredStudents(filteredStudents) {
 //SORT
 
 // Global variable to store filtered and sorted students
-// let filteredAndSortedStudents = [];
-
+let filteredAndSortedStudents = [];
+let prefects = [];
 
 
 // Filter function (updated)
 function filterStudentsByHouse(house) {
   const filteredStudents = allStudents.filter(student => student.house === house);
-  // filteredAndSortedStudents = [...filteredStudents];
-  displayFilteredStudents(filteredStudents);
+  filteredAndSortedStudents = [...filteredStudents];
+  displayFilteredStudents(filteredAndSortedStudents);
 }
 
 // Sort buttons
-// const sortByFirstNameBtn = document.getElementById("sortByFirstNameBtn");
-// const sortByLastNameBtn = document.getElementById("sortByLastNameBtn");
+const sortByFirstNameBtn = document.getElementById("sortByFirstNameBtn");
+const sortByLastNameBtn = document.getElementById("sortByLastNameBtn");
 
 // Add event listeners to the buttons
-// sortByFirstNameBtn.addEventListener("click", () => {
-//   sortByFirstNameBtn.classList.add("activeSort");
-//   sortByLastNameBtn.classList.remove("activeSort");
-//   sortFilteredStudents("firstName");
+sortByFirstNameBtn.addEventListener("click", () => {
+  sortByFirstNameBtn.classList.add("activeSort");
+  sortByLastNameBtn.classList.remove("activeSort");
+  sortFilteredStudents("firstName");
+});
 
-
-// sortByLastNameBtn.addEventListener("click", () => {
-//   sortByLastNameBtn.classList.add("activeSort");
-//   sortByFirstNameBtn.classList.remove("activeSort");
-//   sortFilteredStudents("lastName");
-// });
+sortByLastNameBtn.addEventListener("click", () => {
+  sortByLastNameBtn.classList.add("activeSort");
+  sortByFirstNameBtn.classList.remove("activeSort");
+  sortFilteredStudents("lastName");
+});
 
 // Helper function to sort filtered students
-// function sortFilteredStudents(sortBy) {
-//   if (sortBy === "firstName") {
-//     filteredAndSortedStudents.sort((a, b) => a.firstName.localeCompare(b.firstName));
-//   } else if (sortBy === "lastName") {
-//     filteredAndSortedStudents.sort((a, b) => a.lastName.localeCompare(b.lastName));
-//   }
-//   displayFilteredStudents(filteredAndSortedStudents);
-// }
+function sortFilteredStudents(sortBy) {
+  if (sortBy === "firstName") {
+    filteredAndSortedStudents.sort((a, b) => a.firstName.localeCompare(b.firstName));
+  } else if (sortBy === "lastName") {
+    filteredAndSortedStudents.sort((a, b) => a.lastName.localeCompare(b.lastName));
+  }
+  displayFilteredStudents(filteredAndSortedStudents);
+}
 
 
-// function sortAllStudentsByFirstName() {
-//   allStudents.sort((a, b) => a.firstName.localeCompare(b.firstName));
-//   displayList();
-// }
+function sortAllStudentsByFirstName() {
+  allStudents.sort((a, b) => a.firstName.localeCompare(b.firstName));
+  displayList();
+}
 
-// function sortAllStudentsByLastName() {
-//   allStudents.sort((a, b) => a.lastName.localeCompare(b.lastName));
-//   displayList();
-// }
+function sortAllStudentsByLastName() {
+  allStudents.sort((a, b) => a.lastName.localeCompare(b.lastName));
+  displayList();
+}
 
 
-//MODAL STUDENT INFO_____________________________________________________________
+//MODAL STUDENT INFO
 
 function openModal(student) {
   const modal = document.getElementById("myModal");
@@ -404,7 +483,7 @@ prefectBtn.addEventListener("click", () => {
   });
   
 
-  //BLOOD STATUS_____________________________________________
+  //BLOOD STATUS
 
   function loadBloodStatusData() {
     return fetch("https://petlatkea.dk/2021/hogwarts/families.json")
@@ -413,7 +492,7 @@ prefectBtn.addEventListener("click", () => {
   }
   
 
-  //INQ SQUAD___________________________________________________
+  //INQ SQUAD
 
   
   function toggleInquisitorialSquad(student) {
@@ -444,13 +523,20 @@ prefectBtn.addEventListener("click", () => {
     }
   
     // Update displayed student counts
-    // const displayedCount = filteredAndSortedStudents.length;
-    const displayedCount = inquisitorialStudents.length;
+    const displayedCount = filteredAndSortedStudents.length;
     const totalCount = allStudents.length;
-    const houseCounts = countStudents(filteredStudents);
-    displayStudentCounts(totalCount, houseCounts);
+    const houseCounts = countStudents(filteredAndSortedStudents);
+    displayStudentCounts(displayedCount, totalCount, houseCounts);
   }
+  
+  
+  
+  
+  
+  
+  
 
+  
   
   const removeStudentButton = document.getElementById('removeStudentButton');
   function removeStudentFromSquad() {
@@ -489,11 +575,17 @@ document.querySelector("#studentCounts").addEventListener('click', event => {
   }
 });
 
+const inquisitorialSquadBtn = document.getElementById("inquisitorialSquadBtn");
+inquisitorialSquadBtn.addEventListener("click", filterStudentsByInquisitorialSquad);
 
-//PREFECTS___________________________________________________________________
+function filterStudentsByInquisitorialSquad() {
+  const inquisitorialSquadStudents = allStudents.filter(student => student.inquisitorialSquad === true);
+  displayFilteredStudents(inquisitorialSquadStudents);
+}
 
 
-let prefects = [];
+//PREFECTS
+
 function togglePrefect(student) {
   const prefectBtn = document.querySelector("#prefectBtn");
   const prefectStatus = document.querySelector("#prefectStatus");
@@ -553,6 +645,14 @@ function displayPrefects() {
   const houseCounts = countStudents(prefectStudents);
   displayStudentCounts(displayedCount, totalCount, houseCounts);
 }
+const prefectsBtn = document.getElementById("prefectsBtn");
+prefectsBtn.addEventListener("click", filterStudentsByPrefect);
+
+function filterStudentsByPrefect() {
+  const filteredStudents = allStudents.filter(student => student.prefect);
+  displayFilteredStudents(filteredStudents);
+}
+
 
 
 
@@ -566,16 +666,12 @@ function isPrefect(student) {
 }
 
 
-
-
-
-
-//UPDATEEEEEE_________________________________
+//UPDATEEEEEE
 
 function updateStudentCount() {
-  const displayedCount = allStudents.length;
+  const displayedCount = filteredAndSortedStudents.length;
   const totalCount = allStudents.length;
-  const houseCounts = countStudents(filteredStudents);
+  const houseCounts = countStudents(filteredAndSortedStudents);
   displayStudentCounts(displayedCount, totalCount, houseCounts);
 
   // Display the updated student count in the element
@@ -617,84 +713,3 @@ function displayStudentCounts(displayedCount, totalCount, counts) {
 }
 
 
-
-
-//_____________________________COUNT____________________________________
-
-//STUDENTS COUNT
-function countStudents() {
-  const houseCounts = {
-    Gryffindor: 0,
-    Hufflepuff: 0,
-    Ravenclaw: 0,
-    Slytherin: 0,
-  };
-
-  allStudents.forEach(student => {
-    houseCounts[student.house]++;
-  });
-
-  houseCounts.total = allStudents.length;
-
-  return houseCounts;
-}
-
-
-
-
-/////DISPALY----------------
-
-// Display function (updated)
-function displayList() {
-  const listContainer = document.querySelector("#list tbody");
-  listContainer.innerHTML = "";
-
-  let studentsToDisplay = allStudents;
-
-  const activeHouse = document.querySelector(".activeHouse");
-  if (activeHouse) {
-    const house = activeHouse.getAttribute("data-house");
-    studentsToDisplay = allStudents.filter(student => student.house === house);
-  }
-
-  // let sortedStudents = [...studentsToDisplay];
-
-  // if (sortBy === "firstName") {
-  //   sortedStudents.sort((a, b) => a.firstName.localeCompare(b.firstName));
-  // } else if (sortBy === "lastName") {
-  //   sortedStudents.sort((a, b) => a.lastName.localeCompare(b.lastName));
-  // }
-
-  // sortedStudents.forEach(displayStudent);
-
-  // Update student count display
-  const displayedCount = allStudents.length;
-  const totalCount = allStudents.length;
-  const houseCounts = countStudents();
-  displayStudentCounts(displayedCount, totalCount, houseCounts);
-}
-
-
-
-
-
-
-
-
-
-
-
-// START ---------------------------------- 
-function start() {
-  console.log("ready");
-
-  loadJSON();
-
-  const searchInput = document.getElementById("searchInput");
-  searchInput.addEventListener("input", performSearch);
-  // const sortAllByFirstNameBtn = document.getElementById("sortAllByFirstNameBtn");
-  // sortAllByFirstNameBtn.addEventListener("click", sortAllStudentsByFirstName);
-  
-  // const sortAllByLastNameBtn = document.getElementById("sortAllByLastNameBtn");
-  // sortAllByLastNameBtn.addEventListener("click", sortAllStudentsByLastName);
-}
