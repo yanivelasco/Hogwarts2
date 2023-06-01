@@ -8,6 +8,7 @@ const allStudents = [];
 const inquisitorialSquad = []; // Array to store the members of the Inquisitorial Squad
 let expelledStudents = [];
 const modal = document.getElementById("myModal");
+const prefects = [];
 
 
 
@@ -212,6 +213,8 @@ function displayStudent(student) {
   });
 
   document.querySelector("#list tbody").appendChild(clone);
+
+  
 }
 
 
@@ -369,7 +372,6 @@ function displayFilteredStudents(filteredStudents) {
 
 // Global variable to store filtered and sorted students
 let filteredAndSortedStudents = [];
-let prefects = [];
 
 
 // Filter function (updated)
@@ -454,11 +456,20 @@ function openModal(student) {
     const inquisitorialSquadStatus = document.querySelector("#inquisitorialSquadStatus");
     inquisitorialBtn.innerText = student.inquisitorialSquad ? "Remove from Inquisitorial Squad" : "Add to Inquisitorial Squad";
     inquisitorialSquadStatus.innerText = `Inquisitorial Squad: ${inquisitorialSquad.includes(student) ? 'Yes' : 'No'}`;
+
+    
+
+    const prefectStatus = document.querySelector("#prefectStatus");
+prefectStatus.innerText = `Prefect: ${student.prefect ? 'Yes' : 'No'}`;
+prefectBtn.innerText = student.prefect ? "Remove from Prefects" : "Add to Prefects";
+
   });
 
   const prefectBtn = modal.querySelector("#prefectBtn");
 prefectBtn.addEventListener("click", () => {
   togglePrefect(student);
+  console.log('Prefect button clicked');
+
 
   
 });
@@ -614,19 +625,19 @@ function togglePrefect(student) {
     const index = prefects.indexOf(student);
     if (index > -1) {
       prefects.splice(index, 1);
-      student.prefect = false; // Updating the student's prefect status
+      student.prefect = false; // Update student's prefect status
       prefectBtn.innerText = "Add to Prefects";
       prefectStatus.innerText = "Prefect: No";
-      updateStudentCount(); // Update the prefect count after removal
+      updateStudentCount(); // Update the student count after removal
     }
   } else {
     const sameHousePrefects = prefects.filter(prefect => prefect.house === student.house);
     if (sameHousePrefects.length < 2) {
       prefects.push(student);
-      student.prefect = true; // Updating the student's prefect status
+      student.prefect = true; // Update student's prefect status
       prefectBtn.innerText = "Remove from Prefects";
       prefectStatus.innerText = "Prefect: Yes";
-      updateStudentCount(); // Update the prefect count after addition
+      updateStudentCount(); // Update the student count after addition
     } else {
       // Disable the button and apply red styling
       prefectBtn.disabled = true;
@@ -639,21 +650,19 @@ function togglePrefect(student) {
 }
 
 
+
+
+
 // Add click event to "Prefects" count
-document.querySelector("#studentCounts").addEventListener('click', event => {
-  if (event.target.textContent.startsWith('Prefects: ')) {
+document.getElementById("prefectsBtn").addEventListener('click', event => {
+  
     displayPrefects();
-  }
+  
 });
 
 function displayPrefects() {
-  // Filter prefect students
   const prefectStudents = allStudents.filter(student => student.prefect);
 
-  // Sort by first name
-  prefectStudents.sort((a, b) => a.firstName.localeCompare(b.firstName));
-
-  // Display students
   const listContainer = document.querySelector("#list tbody");
   listContainer.innerHTML = "";
 
@@ -664,13 +673,20 @@ function displayPrefects() {
   const houseCounts = countStudents(prefectStudents);
   displayStudentCounts(displayedCount, totalCount, houseCounts);
 }
-const prefectsBtn = document.getElementById("prefectsBtn");
-prefectsBtn.addEventListener("click", filterStudentsByPrefect);
 
-function filterStudentsByPrefect() {
-  const filteredStudents = allStudents.filter(student => student.prefect);
-  displayFilteredStudents(filteredStudents);
-}
+
+const prefectsBtn = document.getElementById("prefectsBtn");
+prefectsBtn.addEventListener("click", displayPrefects);
+
+
+// const prefectsBtn = document.getElementById("prefectsBtn");
+// prefectsBtn.addEventListener("click", filterStudentsByPrefect);
+
+
+// function filterStudentsByPrefect() {
+//   const filteredStudents = allStudents.filter(student => student.prefect);
+//   displayFilteredStudents(filteredStudents);
+// }
 
 
 
@@ -698,8 +714,11 @@ function updateStudentCount() {
   const totalCountElement = countContainer.querySelector("div:first-child");
   totalCountElement.textContent = `Showing ${displayedCount} of ${totalCount} students`;
 
+  const prefectCountElement = document.querySelector("#studentCounts div:nth-child(5)"); // Update the location if necessary
+  prefectCountElement.textContent = `Prefects: ${prefects.length}`; // Update the prefect count text
+
+
   const prefectCount = prefects.length; // Get the prefect count
-  const prefectCountElement = countContainer.querySelector(":nth-child(5)"); // Select the prefect count element
   prefectCountElement.textContent = `Prefects: ${prefectCount}`; // Update the prefect count text
 }
 
@@ -818,11 +837,6 @@ function showExpelledStudents() {
 
   displayStudentCounts(displayedCount, totalCount, houseCounts, expelledCount);
 }
-
-
-
-
-
 
 
 
