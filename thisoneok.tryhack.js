@@ -891,6 +891,12 @@ function hackTheSystem() {
   console.log("The system has been hacked!");
 }
 
+document.getElementById('hackButton').addEventListener('click', function() {
+  hackTheSystem();
+
+  // Disable the button after it's been clicked once
+  this.disabled = true;
+});
 
   
 
