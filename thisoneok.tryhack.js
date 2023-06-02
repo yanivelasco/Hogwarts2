@@ -5,10 +5,17 @@
 window.addEventListener("DOMContentLoaded", start);
 
 const allStudents = [];
-const inquisitorialSquad = []; // Array to store the members of the Inquisitorial Squad
+const inquisitorialSquad = []; 
 let expelledStudents = [];
 const modal = document.getElementById("myModal");
 const prefects = [];
+const houseColors = {
+  "Gryffindor": "red",
+  "Hufflepuff": "yellow",
+  "Ravenclaw": "blue",
+  "Slytherin": "green",
+
+};
 
 
 
@@ -165,7 +172,7 @@ async function prepareObjects(jsonData) {
     }
 
 
-    // Calculate blood status
+    
     const { half, pure } = bloodStatusData;
     const isPureBlood = pure.includes(student.lastName);
     const isHalfBlood = half.includes(student.lastName);
@@ -201,12 +208,14 @@ function displayStudent(student) {
   clone.querySelector("#studentImage").src = student.image.src;
   clone.querySelector("[data-field=house]").textContent = student.house;
 
+  
+
   const studentImage = clone.querySelector("#studentImage");
   studentImage.addEventListener("click", () => {
     openModal(student);
 
     if (student.expelled) {
-      return; // Skip expelled students
+      return; 
     }
   
     const clone = document.querySelector("template#student").content.cloneNode(true); 
@@ -242,7 +251,7 @@ function displayFilteredStudents(filteredStudents) {
     displayStudent(student);
   });
 
-  const displayedCount = filteredStudents.length; // Update displayedCount
+  const displayedCount = filteredStudents.length; 
   const totalCount = allStudents.length;
   const houseCounts = countStudents();
   displayStudentCounts(displayedCount, totalCount, houseCounts);
@@ -273,7 +282,6 @@ function countStudents() {
 
 /////DISPALY----------------
 
-// Display function (updated)
 function displayList(sortBy) {
   const listContainer = document.querySelector("#list tbody");
   listContainer.innerHTML = "";
@@ -296,7 +304,7 @@ function displayList(sortBy) {
 
   sortedStudents.forEach(displayStudent);
 
-  // Update student count display
+  
   const displayedCount = sortedStudents.length;
   const totalCount = allStudents.length;
   const houseCounts = countStudents(sortedStudents);
@@ -370,22 +378,22 @@ function displayFilteredStudents(filteredStudents) {
 
 //SORT
 
-// Global variable to store filtered and sorted students
+
 let filteredAndSortedStudents = [];
 
 
-// Filter function (updated)
+
 function filterStudentsByHouse(house) {
   const filteredStudents = allStudents.filter(student => student.house === house);
   filteredAndSortedStudents = [...filteredStudents];
   displayFilteredStudents(filteredAndSortedStudents);
 }
 
-// Sort buttons
+
 const sortByFirstNameBtn = document.getElementById("sortByFirstNameBtn");
 const sortByLastNameBtn = document.getElementById("sortByLastNameBtn");
 
-// Add event listeners to the buttons
+
 sortByFirstNameBtn.addEventListener("click", () => {
   sortByFirstNameBtn.classList.add("activeSort");
   sortByLastNameBtn.classList.remove("activeSort");
@@ -398,7 +406,7 @@ sortByLastNameBtn.addEventListener("click", () => {
   sortFilteredStudents("lastName");
 });
 
-// Helper function to sort filtered students
+
 function sortFilteredStudents(sortBy) {
   if (sortBy === "firstName") {
     filteredAndSortedStudents.sort((a, b) => a.firstName.localeCompare(b.firstName));
@@ -482,11 +490,11 @@ const expelStudentBtn = modal.querySelector("#expelStudentBtn");
   const inquisitorialBtn = modal.querySelector("#inquisitorialBtn");
   
   if (student.bloodStatus !== "Pure-Blood" && !(student.bloodStatus === "Half-Blood" && student.house === "Slytherin")) {
-    // Disable the button and apply red styling
+
     inquisitorialBtn.disabled = true;
     inquisitorialBtn.classList.add("not-eligible", "tooltip");
     
-    // Add title attribute for tooltip
+  
     inquisitorialBtn.innerHTML += '<span class="tooltip-text">You can only add pure-blood students or students from Slytherin.</span>';
   } else {
     inquisitorialBtn.classList.remove("tooltip");
@@ -504,7 +512,7 @@ const expelStudentBtn = modal.querySelector("#expelStudentBtn");
     modal.style.display = "none";
   }
   
-  // Add event listener to close the modal when the user clicks outside the modal content
+ 
   window.addEventListener("click", (event) => {
     const modal = document.getElementById("myModal");
     if (event.target === modal) {
@@ -531,18 +539,18 @@ const expelStudentBtn = modal.querySelector("#expelStudentBtn");
     const inquisitorialSquadStatus = document.querySelector("#inquisitorialSquadStatus");
   
     if (isInInquisitorialSquad) {
-      // Remove student from the inquisitorial squad
+  
       const index = inquisitorialSquad.indexOf(student);
       inquisitorialSquad.splice(index, 1);
-      student.inquisitorialSquad = false; // Updating the student's Inquisitorial Squad status
+      student.inquisitorialSquad = false; 
       console.log(`${student.firstName} ${student.lastName} removed from the Inquisitorial Squad.`);
       inquisitorialBtn.innerText = "Add to Inquisitorial Squad";
       inquisitorialSquadStatus.innerText = "Inquisitorial Squad: No";
     } else {
-      // Only add student to the squad if they aren't already in it
+     
       if (!isInInquisitorialSquad && (student.bloodStatus === 'Pure-Blood' || (student.bloodStatus === 'Half-Blood' && student.house === 'Slytherin'))) {
         inquisitorialSquad.push(student);
-        student.inquisitorialSquad = true; // Updating the student's Inquisitorial Squad status
+        student.inquisitorialSquad = true; 
         console.log(`${student.firstName} ${student.lastName} added to the Inquisitorial Squad.`);
         inquisitorialBtn.innerText = "Remove from Inquisitorial Squad";
         inquisitorialSquadStatus.innerText = "Inquisitorial Squad: Yes";
@@ -552,7 +560,7 @@ const expelStudentBtn = modal.querySelector("#expelStudentBtn");
       updateStudentCount();
     }
   
-    // Update displayed student counts
+    
     const displayedCount = filteredAndSortedStudents.length;
     const totalCount = allStudents.length;
     const houseCounts = countStudents(filteredAndSortedStudents);
@@ -570,23 +578,22 @@ const expelStudentBtn = modal.querySelector("#expelStudentBtn");
   
   const removeStudentButton = document.getElementById('removeStudentButton');
   function removeStudentFromSquad() {
-    // Code to remove the student goes here
+  
     console.log('Student removed from the Inquisitorial Squad');
     
-    // Hide the remove student button
+
     removeStudentButton.style.display = 'none';
   }
   removeStudentButton.addEventListener('click', removeStudentFromSquad);
 
-  // Function to display the Inquisitorial Squad students
+
 function displayInquisitorialSquad() {
-  // Filter Inquisitorial Squad students
+
   const inquisitorialStudents = allStudents.filter(student => inquisitorialSquad.includes(student));
 
-  // Sort by first name
+
   inquisitorialStudents.sort((a, b) => a.firstName.localeCompare(b.firstName));
 
-  // Display students
   const listContainer = document.querySelector("#list tbody");
   listContainer.innerHTML = "";
 
@@ -598,7 +605,7 @@ function displayInquisitorialSquad() {
   displayStudentCounts(displayedCount, totalCount, houseCounts);
 }
 
-// Add click event to Inquisitorial Squad displayed count
+
 document.querySelector("#studentCounts").addEventListener('click', event => {
   if (event.target.textContent.startsWith('Inquisitorial Squad: ')) {
     displayInquisitorialSquad();
@@ -621,29 +628,29 @@ function togglePrefect(student) {
   const prefectStatus = document.querySelector("#prefectStatus");
 
   if (student.prefect) {
-    // Remove student from the prefects
+   
     const index = prefects.indexOf(student);
     if (index > -1) {
       prefects.splice(index, 1);
-      student.prefect = false; // Update student's prefect status
+      student.prefect = false; 
       prefectBtn.innerText = "Add to Prefects";
       prefectStatus.innerText = "Prefect: No";
-      updateStudentCount(); // Update the student count after removal
+      updateStudentCount(); 
     }
   } else {
     const sameHousePrefects = prefects.filter(prefect => prefect.house === student.house);
     if (sameHousePrefects.length < 2) {
       prefects.push(student);
-      student.prefect = true; // Update student's prefect status
+      student.prefect = true; 
       prefectBtn.innerText = "Remove from Prefects";
       prefectStatus.innerText = "Prefect: Yes";
-      updateStudentCount(); // Update the student count after addition
+      updateStudentCount(); 
     } else {
-      // Disable the button and apply red styling
+     
       prefectBtn.disabled = true;
       prefectBtn.classList.add("not-eligible", "tooltip");
 
-      // Add title attribute for tooltip
+      
       prefectBtn.innerHTML += '<span class="tooltip-text">There are already two prefects from the same house.</span>';
     }
   }
@@ -653,7 +660,7 @@ function togglePrefect(student) {
 
 
 
-// Add click event to "Prefects" count
+
 document.getElementById("prefectsBtn").addEventListener('click', event => {
   
     displayPrefects();
@@ -691,7 +698,7 @@ prefectsBtn.addEventListener("click", displayPrefects);
 
 
 
-  // Update modal
+
   openModal(student);
 
 
@@ -709,17 +716,17 @@ function updateStudentCount() {
   const houseCounts = countStudents(filteredAndSortedStudents);
   displayStudentCounts(displayedCount, totalCount, houseCounts);
 
-  // Display the updated student count in the element
+  
   const countContainer = document.querySelector("#studentCounts");
   const totalCountElement = countContainer.querySelector("div:first-child");
   totalCountElement.textContent = `Showing ${displayedCount} of ${totalCount} students`;
 
-  const prefectCountElement = document.querySelector("#studentCounts div:nth-child(5)"); // Update the location if necessary
-  prefectCountElement.textContent = `Prefects: ${prefects.length}`; // Update the prefect count text
+  const prefectCountElement = document.querySelector("#studentCounts div:nth-child(5)"); 
+  prefectCountElement.textContent = `Prefects: ${prefects.length}`;
 
 
-  const prefectCount = prefects.length; // Get the prefect count
-  prefectCountElement.textContent = `Prefects: ${prefectCount}`; // Update the prefect count text
+  const prefectCount = prefects.length; 
+  prefectCountElement.textContent = `Prefects: ${prefectCount}`; 
 }
 
 
@@ -749,7 +756,6 @@ function displayStudentCounts(displayedCount, totalCount, counts, expelledCount 
   prefectCountElement.textContent = `Prefects: ${prefectCount}`;
   countContainer.appendChild(prefectCountElement);
 
-  // Adding the count for expelled students
   const expelledCountElement = document.createElement("div");
   expelledCountElement.textContent = `Expelled: ${expelledCount}`;
   countContainer.appendChild(expelledCountElement);
@@ -760,26 +766,26 @@ function displayStudentCounts(displayedCount, totalCount, counts, expelledCount 
 //EXPEL
 
 function expelStudent(student) {
-  // Check if the student is already in the expelledStudents array
+  
   if (!expelledStudents.includes(student)) {
-    // Add student to the expelled students array
+   
     expelledStudents.push(student);
   } else {
     console.log("Attempted to expel a student who was already expelled: ", student);
-    return;  // If student is already expelled, don't continue
+    return;  
   }
 
-  // Remove student from the allStudents array
+ 
   const index = allStudents.indexOf(student);
   if (index > -1) {
     allStudents.splice(index, 1);
     
   }
 
-  // Update student's expelled status
+  
   student.expelled = true;
 
-  // Add 'expelled' class to the student's element
+
   const studentElement = document.getElementById(student.id);
   if (studentElement) {
     studentElement.classList.add('expelled');
@@ -788,10 +794,10 @@ function expelStudent(student) {
 
 
 
-  updateStudentCount(); // you should also adjust your student counts to reflect this change
+  updateStudentCount();
 
 
-  // Remove student from inquisitorialSquad and prefects if they are in these lists
+
   const inquisitorialIndex = inquisitorialSquad.indexOf(student);
   if (inquisitorialIndex > -1) {
     inquisitorialSquad.splice(inquisitorialIndex, 1);
@@ -802,7 +808,6 @@ function expelStudent(student) {
     prefects.splice(prefectIndex, 1);
   }
 
-  // Add student to expelledStudents
   expelledStudents.push(student);
   console.log(`The student ${student.firstName} ${student.lastName} has been expelled.`);
 
@@ -819,16 +824,13 @@ function expelStudent(student) {
 }
 
 
-// Add event listener for expelling a student
 
 
 function showExpelledStudents() {
   const listContainer = document.querySelector("#list tbody");
 
-  // Clear listContainer
   listContainer.innerHTML = "";
 
-  // Filter out the unique expelled students
   const uniqueExpelledStudents = expelledStudents.filter(
     (student, index, self) =>
       index === self.findIndex((s) => s === student)
@@ -869,12 +871,10 @@ function hackTheSystem() {
   const imageSrc = new Image();
   newStudent.image = imageSrc;
 
-  imageSrc.src = "images/dd.jpg"; // Update the image source
+  imageSrc.src = "images/dd.jpg"; // 
 
   allStudents.push(newStudent);
   displayStudent(newStudent);
-
-  //Reassign bloodStatus
   allStudents.forEach((student) => {
     if (student.bloodStatus === "Pure-Blood") {
       student.bloodStatus = "Muggle";
@@ -894,7 +894,7 @@ function hackTheSystem() {
 document.getElementById('hackButton').addEventListener('click', function() {
   hackTheSystem();
 
-  // Disable the button after it's been clicked once
+ 
   this.disabled = true;
 });
 
