@@ -858,13 +858,18 @@ function hackTheSystem() {
     lastName: "Dursley",
     middleName: "",
     nickName: "Duddy",
-    image:"images/dd.jpg",
+    image:"",
     house: "Gryffindor",
     bloodStatus: "Pure-Blood",
     inquisitorialSquad: false,
     expelled: false,
     prefect: false
   };
+
+  const imageSrc = new Image();
+  newStudent.image = imageSrc;
+
+  imageSrc.src = "images/dd.jpg"; // Update the image source
 
   allStudents.push(newStudent);
   displayStudent(newStudent);
@@ -875,8 +880,11 @@ function hackTheSystem() {
   displayStudentCounts(displayedCount, totalCount, houseCounts);
 
   console.log("The system has been hacked!");
+}
 
   
-}
+
+
+
 
 
