@@ -858,9 +858,9 @@ function hackTheSystem() {
     lastName: "Dursley",
     middleName: "",
     nickName: "Duddy",
-    image:"",
-    house: "Gryffindor",
-    bloodStatus: "Pure-Blood",
+    image:"./dd.jpg",
+    house: "4 Privet Drive Street",
+    bloodStatus: "Dark-Blood",
     inquisitorialSquad: false,
     expelled: false,
     prefect: false
@@ -874,6 +874,15 @@ function hackTheSystem() {
   allStudents.push(newStudent);
   displayStudent(newStudent);
 
+  //Reassign bloodStatus
+  allStudents.forEach((student) => {
+    if (student.bloodStatus === "Pure-Blood") {
+      student.bloodStatus = "Muggle";
+    } else if (student.bloodStatus === "Half-Blood" || student.bloodStatus === "Muggle") {
+      student.bloodStatus = "Pure-Blood";
+    }
+  });
+
   const displayedCount = filteredAndSortedStudents.length + 1;
   const totalCount = allStudents.length;
   const houseCounts = countStudents(filteredAndSortedStudents);
@@ -881,6 +890,7 @@ function hackTheSystem() {
 
   console.log("The system has been hacked!");
 }
+
 
   
 
